@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import FoodForm from "./Form";
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
       }
     )
   }, [])
-console.log(data.members)
+
   return (
     <div>
 
@@ -25,6 +26,7 @@ console.log(data.members)
           <p key={i}>{member}</p>
         ))
       )}
+      <FoodForm />
     </div>
   )
 }
