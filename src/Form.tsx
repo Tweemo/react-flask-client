@@ -2,9 +2,13 @@ import * as Yup from 'yup'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function FoodForm() {
+
+  const globalPantry:any = localStorage.getItem("Pantry")
+  const [startDate, setStartDate] = useState(new Date());
 
   const validationSchema = Yup.object().shape({
     Food: Yup.string().required("Food is required"),
@@ -12,23 +16,7 @@ function FoodForm() {
     Quantity: Yup.string().required("Quantity is required"),
     Expiry: Yup.date().required("Expiry is required"),
     });
-
-    useEffect(() => localStorage.setItem("Pantry", "Empty"),[])
     
-    const submitForm = (values:object) => {
-      
-      if (localStorage.getItem("Pantry") === "Empty") {
-        localStorage.setItem("Pantry", JSON.stringify([values]));
-      } else {
-        const pantry:any= localStorage.getItem("Pantry")
-        const updatedPantry = JSON.parse(pantry)
-        updatedPantry.push(values);
-        localStorage.setItem("Pantry", JSON.stringify(updatedPantry));
-      }
-  };
-
-    const [startDate, setStartDate] = useState(new Date());
-
     const initialValues = {
       Food: "",
       Brand: "",
@@ -36,6 +24,22 @@ function FoodForm() {
       Expiry: "",
       Date_Added: new Date().toDateString()
     };
+
+    const submitForm = (values:object) => {
+      if (globalPantry !== Array) {
+        localStorage.setItem("Pantry", JSON.stringify([values]));
+      } else {
+        const pantry:any= localStorage.getItem("Pantry")
+        const updatedPantry = JSON.parse(pantry)
+        updatedPantry.push(values);
+        localStorage.setItem("Pantry", JSON.stringify(updatedPantry));
+      }
+    };
+
+    // Use this to reset the pantry. 
+    // useEffect(() => {
+    //       localStorage.setItem("Pantry", "Empty")
+    //     },[]) 
 
   return (
         <Formik
