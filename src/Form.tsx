@@ -39,14 +39,15 @@ function FoodForm() {
     
     const submitForm = (values:object) => {
       if (isPantryEmpty) {
-        localStorage.setItem("Pantry", JSON.stringify([values]));
+        const pantry = {"pantry":[values]}
+        localStorage.setItem("Pantry", JSON.stringify(pantry));
         setIsPantryEmpty(false)
       } else {
         const pantry:any= localStorage.getItem("Pantry")
         const updatedPantry = JSON.parse(pantry)
-        updatedPantry.push(values);
+        updatedPantry.pantry.push(values);
         localStorage.setItem("Pantry", JSON.stringify(updatedPantry));
-        postData(updatedPantry)
+        postData(values)
         }
       }
       
