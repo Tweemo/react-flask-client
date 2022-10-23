@@ -2,12 +2,12 @@ import * as Yup from 'yup'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
-// import { useEffect, useState } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function FoodForm() {
 
   const globalPantry:any = localStorage.getItem("Pantry")
+  const [isPantryEmpty, setIsPantryEmpty] = useState(Boolean);
   const [startDate, setStartDate] = useState(new Date());
 
   const validationSchema = Yup.object().shape({
@@ -25,21 +25,39 @@ function FoodForm() {
       Date_Added: new Date().toDateString()
     };
 
+    const postData = (data: Object) => {
+      fetch(`/api`, {
+       'method':'POST',
+        headers : {
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .catch(error => console.log(error))
+    }
+    
     const submitForm = (values:object) => {
-      if (globalPantry !== Array) {
+      if (isPantryEmpty) {
         localStorage.setItem("Pantry", JSON.stringify([values]));
+        setIsPantryEmpty(false)
       } else {
         const pantry:any= localStorage.getItem("Pantry")
         const updatedPantry = JSON.parse(pantry)
         updatedPantry.push(values);
         localStorage.setItem("Pantry", JSON.stringify(updatedPantry));
+        postData(updatedPantry)
+        }
       }
-    };
-
+      
+      useEffect(() => {
+        (globalPantry === 'Empty') ? setIsPantryEmpty(true) : setIsPantryEmpty(false)
+      }, [globalPantry, isPantryEmpty])
+      
     // Use this to reset the pantry. 
-    // useEffect(() => {
-    //       localStorage.setItem("Pantry", "Empty")
-    //     },[]) 
+    useEffect(() => {
+          localStorage.setItem("Pantry", "Empty")
+        },[]) 
 
   return (
         <Formik
