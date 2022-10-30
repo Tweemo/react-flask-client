@@ -26,7 +26,7 @@ function FoodForm() {
     };
 
     const postData = (data: Object) => {
-      fetch(`/api`, {
+      fetch('/api', {
        'method':'POST',
         headers : {
           'Content-Type':'application/json'
@@ -42,6 +42,7 @@ function FoodForm() {
         const pantry = {"pantry":[values]}
         localStorage.setItem("Pantry", JSON.stringify(pantry));
         setIsPantryEmpty(false)
+        postData(values)
       } else {
         const pantry:any= localStorage.getItem("Pantry")
         const updatedPantry = JSON.parse(pantry)
