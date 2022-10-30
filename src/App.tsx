@@ -3,29 +3,28 @@ import FoodForm from "./Form";
 
 function App() {
 
-  const [data, setData] = useState({"members": []});
+  const [food, setFood] = useState([]);
 
   useEffect(() => { 
-    fetch("/members").then (
+    fetch("/pantry").then(
       res => res.json()
     ).then(
-      data => {
-      setData(data)
+      food => {
+      setFood(food.pantry)
       }
     )
   }, [])
 
   return (
     <div>
-
-      {typeof data.members === 'undefined' ? (
-        <p>loading...</p>
-      ) : (
-        data.members.map((member: any, i: number) => (
-          <p key={i}>{member}</p>
-        ))
-      )}
       <FoodForm />
+      {typeof food === 'undefined' ? (
+        <p>loading...</p>
+        ) : (
+          food.map((item: any, i: number) => (
+            <p key={i}>{item.food}</p>
+            ))
+            )}
     </div>
   )
 }
